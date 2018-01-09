@@ -1,33 +1,51 @@
-TIMO - IO Microservice
-========================
+# TIMO - IO Microservice
 
 Reads and writes from the serial interface to communicate with the arduino.
-Reads Incoming Sockets to Send Commands to the Arduino.  
-Emits Sockets on Retreived Messages from Arduino.  
 
-# Commands
+Reads Incoming Sockets to Send Commands to the Arduino.
+
+Emits Sockets on Retreived Messages from Arduino.
+
+## Commands
+
 All Commands have specific titles and bodys.
 
-## From Arduino
+The Format is: __title:body__
 
-### Scanned QR-Code
+The Serialport-Title is __io__
+
+### From Arduino
+
+#### Scanned QR-Code
+
 * qr (Has ID in body, fired after detection of qr-code)
 * qrwrite (Has Result in body, fired after write to qr is complete)
 
-### LED
+#### LED
+
 * led (Has rgb value in body, fired when led changes value)
 
-### Button
+#### Button
+
 * button (Has buttonID and Status in body, fired on press and release of button)
 
-## To Arduino
+### To Arduino
 
-### Write QR-Code
+#### Write QR-Code
+
 * setqr (body is id)
 
-### LED
+#### LED
+
 * setled (body is rgb value)
 
-# TODO
+---
+
+## TODO
+
 * complete command list
-* code app.js
+* README (like data)
+* Testing
+* jsdoc
+* puml sequence
+* test app.js

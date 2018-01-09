@@ -1,0 +1,16 @@
+{
+  "name": "timo-io",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "serialport": "*",
+    "socket.io":"*",
+    "express":"*"
+  },
+  "devDependencies": {
+    
+  }
+}

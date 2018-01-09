@@ -1,0 +1,64 @@
+/**
+ * @overview IO Microservice Server File
+ * @module index
+ * @author Dominik Sigmund
+ * @version 0.9
+ * @description Starts the Server and keeps it running
+ * @memberof timo-io
+ * @requires serialport
+ */
+
+// Require needed modules
+console.log('Starting up TIMO-IO-service...')
+console.log('Pulling in dependencies...')
+var config = require('./config.json')
+
+var app = require('express')()
+var http = require('http').Server(app)
+var io = require('socket.io')(http)
+
+var SerialPort = require('serialport').SerialPort
+var serialport = new SerialPort(config.serialport)
+
+// Read from Arduino
+serialport.on('open', function () {
+  console.log('Serial Port Opened')
+  serialport.on('data', function (data) {
+    console.log(data)
+    var d = {}
+    d.title = data.split(':')[0]
+    d.body = data.split(':')[1]
+    io.emit('io', d)
+  })
+})
+
+// Write to Arduino
+io.on('connection', function (socket) {
+  console.log('a user connected')
+  socket.on('io', function (data) {
+    console.log(data)
+    serialport.write(data.title + ':' + data.body)
+  })
+})
+
+/** Handles exitEvents by destroying open connections first
+ * @function
+* @param {object} options - Some Options
+* @param {object} err - An Error Object
+*/
+function exitHandler (options, err) {
+  console.log('Exiting...')
+  serialport.close(function () {
+    process.exit()
+  })
+}
+ // catches ctrl+c event
+process.on('SIGINT', exitHandler)
+ // catches uncaught exceptions
+process.on('uncaughtException', function (err) {
+  console.error(err)
+  exitHandler(null, err)
+})
+
+ // keep running
+process.stdin.resume()
