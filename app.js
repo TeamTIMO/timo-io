@@ -41,6 +41,11 @@ io.on('connection', function (socket) {
   })
 })
 
+// Open Server
+http.listen(config.port, function(){
+  console.log('listening on *:' + config.port)
+})
+
 /** Handles exitEvents by destroying open connections first
  * @function
 * @param {object} options - Some Options

@@ -16,10 +16,10 @@ The Serialport-Title is __io__
 
 ### From Arduino
 
-#### Scanned QR-Code
+#### Scanned Card
 
-* qr (Has ID in body, fired after detection of qr-code)
-* qrwrite (Has Result in body, fired after write to qr is complete)
+* id (Has ID in body, fired after detection of id on card)
+* cardwrite (Has Result in body, fired after write to card is complete)
 
 #### LED
 
@@ -31,9 +31,9 @@ The Serialport-Title is __io__
 
 ### To Arduino
 
-#### Write QR-Code
+#### Write Card
 
-* setqr (body is id)
+* setid (body is id)
 
 #### LED
 
