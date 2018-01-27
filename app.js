@@ -45,7 +45,7 @@ io.on('connection', function (socket) {
       sp.write(data.title + ':' + data.body, function(err, res) {
                 if (err) { console.error(err) }
                 sp.close()
-
+      })
     })
   })
 })
