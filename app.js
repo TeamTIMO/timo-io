@@ -17,13 +17,17 @@ var app = require('express')()
 var http = require('http').Server(app)
 var io = require('socket.io')(http)
 
-var SerialPort = require('serialport').SerialPort
-var serialport = new SerialPort(config.serialport)
+var serialPort = require("serialport");
+var SerialPort = require("serialport").SerialPort
+
+var sp = new SerialPort(config.serialport, {
+      baudrate: 9600
+}, false)
 
 // Read from Arduino
-serialport.on('open', function () {
+sp.on('open', function () {
   console.log('Serial Port Opened')
-  serialport.on('data', function (data) {
+  sp.on('data', function (data) {
     console.log(data)
     var d = {}
     d.title = data.split(':')[0]
@@ -37,7 +41,12 @@ io.on('connection', function (socket) {
   console.log('a user connected')
   socket.on('io', function (data) {
     console.log(data)
-    serialport.write(data.title + ':' + data.body)
+    sp.open(function(err) {
+      sp.write(data.title + ':' + data.body, function(err, res) {
+                if (err) { console.error(err) }
+                sp.close())
+
+    })
   })
 })
 
@@ -53,7 +62,7 @@ http.listen(config.port, function(){
 */
 function exitHandler (options, err) {
   console.log('Exiting...')
-  serialport.close(function () {
+  sp.close(function () {
     process.exit()
   })
 }
