@@ -17,8 +17,7 @@ var app = require('express')()
 var http = require('http').Server(app)
 var io = require('socket.io')(http)
 
-var serialPort = require("serialport");
-var SerialPort = require("serialport").SerialPort
+var SerialPort = require("serialport")
 
 var sp = new SerialPort(config.serialport, {
       baudrate: 9600
