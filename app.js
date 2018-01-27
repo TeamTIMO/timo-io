@@ -27,10 +27,11 @@ var sp = new SerialPort(config.serialport, {
 sp.on('open', function () {
   console.log('Serial Port Opened')
   sp.on('data', function (data) {
-    console.log(data)
+    var text = data.toString('utf8')
+    console.log(text)
     var d = {}
-    d.title = data.split(':')[0]
-    d.body = data.split(':')[1]
+    d.title = text.split(':')[0]
+    d.body = text.split(':')[1]
     io.emit('io', d)
   })
 })
