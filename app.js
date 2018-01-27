@@ -20,7 +20,7 @@ var io = require('socket.io')(http)
 var SerialPort = require("serialport")
 
 var sp = new SerialPort(config.serialport, {
-      baudrate: 9600
+      baudRate: 9600
 }, false)
 
 // Read from Arduino
