@@ -43,7 +43,6 @@ io.on('connection', function (socket) {
     console.log('[TIMO-IO]: ' + data)
     sp.write(data.title + ':' + data.body, function (err, res) {
       if (err) { console.error('[TIMO-IO]: ' + err) }
-      sp.close()
     })
   })
 })
