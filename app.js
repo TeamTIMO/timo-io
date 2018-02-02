@@ -38,25 +38,19 @@ sp.on('open', function () {
 
 // Write to Arduino
 io.on('connection', function (socket) {
-  console.log('a user connected')
+  console.log('[TIMO-IO]: ' + 'a user connected: ' + socket)
   socket.on('io', function (data) {
-    console.log(data)
-    sp.open(function (err) {
-      if (err) {
-        console.error('[TIMO-IO]: ' + err)
-      } else {
-        sp.write(data.title + ':' + data.body, function (err, res) {
-          if (err) { console.error('[TIMO-IO]: ' + err) }
-          sp.close()
-        })
-      }
+    console.log('[TIMO-IO]: ' + data)
+    sp.write(data.title + ':' + data.body, function (err, res) {
+      if (err) { console.error('[TIMO-IO]: ' + err) }
+      sp.close()
     })
   })
 })
 
 // Open Server
 http.listen(config.port, function () {
-  console.log('listening on *:' + config.port)
+  console.log('TIMO-IO-service listening on *:' + config.port)
 })
 
 /** Handles exitEvents by destroying open connections first
