@@ -41,9 +41,9 @@ sp.on('close', function () {
 
 // Write to Arduino
 io.on('connection', function (socket) {
-  console.log('[TIMO-IO]: ' + 'a client connected: ' + JSON.stringify(socket))
+  console.log('[TIMO-IO]: ' + 'a client connected: ' + socket.handshake.query.token)
   socket.on('disconnect', function () {
-    console.log('[TIMO-IO]: ' + 'client disconnected')
+    console.log('[TIMO-IO]: ' + 'client disconnected: ' + socket.handshake.query.token)
   })
   socket.on('io', function (data) {
     console.log('[TIMO-IO]: ' + JSON.stringify(data))
