@@ -17,18 +17,18 @@ var app = require('express')()
 var http = require('http').Server(app)
 var io = require('socket.io')(http)
 
-var SerialPort = require("serialport")
+var SerialPort = require('serialport')
 
 var sp = new SerialPort(config.serialport, {
-      baudRate: 9600
+  baudRate: 9600
 }, false)
 
 // Read from Arduino
 sp.on('open', function () {
-  console.log('Serial Port Opened')
+  console.log('[TIMO-IO]: Serial Port Opened')
   sp.on('data', function (data) {
     var text = data.toString('utf8')
-    console.log(text)
+    console.log('[TIMO-IO]: ' + text)
     var d = {}
     d.title = text.split(':')[0]
     d.body = text.split(':')[1]
@@ -41,17 +41,21 @@ io.on('connection', function (socket) {
   console.log('a user connected')
   socket.on('io', function (data) {
     console.log(data)
-    sp.open(function(err) {
-      sp.write(data.title + ':' + data.body, function(err, res) {
-                if (err) { console.error(err) }
-                sp.close()
-      })
+    sp.open(function (err) {
+      if (err) {
+        console.error('[TIMO-IO]: ' + err)
+      } else {
+        sp.write(data.title + ':' + data.body, function (err, res) {
+          if (err) { console.error('[TIMO-IO]: ' + err) }
+          sp.close()
+        })
+      }
     })
   })
 })
 
 // Open Server
-http.listen(config.port, function(){
+http.listen(config.port, function () {
   console.log('listening on *:' + config.port)
 })
 
