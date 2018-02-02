@@ -28,19 +28,25 @@ sp.on('open', function () {
   console.log('[TIMO-IO]: Serial Port Opened')
   sp.on('data', function (data) {
     var text = data.toString('utf8')
-    console.log('[TIMO-IO]: ' + text)
+    console.log('[TIMO-IO]: ARDUINO:  ' + text)
     var d = {}
     d.title = text.split(':')[0]
     d.body = text.split(':')[1]
     io.emit('io', d)
   })
 })
+sp.on('close', function () {
+  console.log('[TIMO-IO]: Serial Port Closed')
+})
 
 // Write to Arduino
 io.on('connection', function (socket) {
-  console.log('[TIMO-IO]: ' + 'a user connected: ' + socket)
+  console.log('[TIMO-IO]: ' + 'a client connected: ' + JSON.stringify(socket))
+  socket.on('disconnect', function () {
+    console.log('[TIMO-IO]: ' + 'client disconnected')
+  })
   socket.on('io', function (data) {
-    console.log('[TIMO-IO]: ' + data)
+    console.log('[TIMO-IO]: ' + JSON.stringify(data))
     sp.write(data.title + ':' + data.body, function (err, res) {
       if (err) { console.error('[TIMO-IO]: ' + err) }
     })
