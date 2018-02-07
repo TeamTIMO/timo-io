@@ -23,6 +23,8 @@ var sp = new SerialPort(config.serialport, {
   baudRate: 9600
 }, false)
 
+var arduinoState = {}
+
 // Read from Arduino
 sp.on('open', function () {
   console.log('[TIMO-IO]: Serial Port Opened')
@@ -32,6 +34,7 @@ sp.on('open', function () {
     var d = {}
     d.title = text.split(':')[0]
     d.body = text.split(':')[1]
+    arduinoState[d.title] = d.body
     io.emit('io', d)
   })
 })
