@@ -43,6 +43,11 @@ sp.on('open', function () {
     d.body = text.split(':')[1]
     arduinoState[d.title] = d.body
     io.emit('io', d)
+    if (text === 'control:shutdown') {
+      setTimeout(function () {
+        require('child_process').exec('sudo /sbin/shutdown -h now')
+      }, 1000)
+    }
   })
 })
 sp.on('close', function () {
