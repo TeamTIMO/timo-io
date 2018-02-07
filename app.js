@@ -32,6 +32,9 @@ var arduinoState = {}
 // Read from Arduino
 sp.on('open', function () {
   console.log('[TIMO-IO]: Serial Port Opened')
+  sp.write('io:ready', function (err, res) {
+    if (err) { console.error('[TIMO-IO]: ' + err) }
+  })
   sp.on('data', function (data) {
     var text = data.toString('utf8')
     console.log('[TIMO-IO]: ARDUINO:  ' + text)
