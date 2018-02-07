@@ -14,8 +14,12 @@ console.log('Pulling in dependencies...')
 var config = require('./config.json')
 
 var app = require('express')()
+var bodyParser = require('body-parser')
 var http = require('http').Server(app)
 var io = require('socket.io')(http)
+
+// Accept Text Body
+app.use(bodyParser.text())
 
 var SerialPort = require('serialport')
 
@@ -59,6 +63,21 @@ io.on('connection', function (socket) {
 // Open Server
 http.listen(config.port, function () {
   console.log('TIMO-IO-service listening on *:' + config.port)
+})
+
+// Routes
+app.get('/state', function (req, res) {
+  res.json(arduinoState)
+})
+app.put('/:title', function (req, res) {
+  sp.write(req.params.title + ':' + req.body, function (err, res) {
+    if (err) {
+      console.error('[TIMO-IO]: ' + err)
+      res.status(501).json(err)
+    } else {
+      res.status(200).end()
+    }
+  })
 })
 
 /** Handles exitEvents by destroying open connections first

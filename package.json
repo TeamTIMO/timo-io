@@ -8,7 +8,8 @@
   "dependencies": {
     "serialport": "*",
     "socket.io":"*",
-    "express":"*"
+    "express":"*",
+    "body-parser": "*"
   },
   "devDependencies": {
     
