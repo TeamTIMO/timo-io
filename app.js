@@ -36,14 +36,11 @@ sp.on('open', function () {
     if (err) { console.error('[TIMO-IO]: ' + err) }
   })
   sp.on('data', function (data) {
-    var text = data.toString('utf8')
-    console.log('[TIMO-IO]: ARDUINO:  ' + text)
-    var d = {}
-    d.title = text.split(':')[0]
-    d.body = text.split(':')[1]
-    arduinoState[d.title] = d.body
-    io.emit('io', d)
-    if (text === 'control:shutdown') {
+    var json = JSON.parse(data.toString())
+    console.log('[TIMO-IO]: ARDUINO:  ' + JSON.stringify(json))
+    arduinoState = json
+    io.emit('io', json)
+    if (json.shutdown >= 30) {
       setTimeout(function () {
         require('child_process').exec('sudo /sbin/shutdown -h now')
       }, 1000)
@@ -63,7 +60,7 @@ io.on('connection', function (socket) {
   })
   socket.on('io', function (data) {
     console.log('[TIMO-IO]: ' + JSON.stringify(data))
-    sp.write(data.title + ':' + data.body, function (err, res) {
+    sp.write(JSON.stringify(data), function (err, res) {
       if (err) { console.error('[TIMO-IO]: ' + err) }
     })
   })
@@ -79,7 +76,7 @@ app.get('/state', function (req, res) {
   res.json(arduinoState)
 })
 app.put('/:title', function (req, res) {
-  sp.write(req.params.title + ':' + req.body, function (err, res) {
+  sp.write({ [req.params.title]: req.body }, function (err, res) {
     if (err) {
       console.error('[TIMO-IO]: ' + err)
       res.status(501).json(err)
